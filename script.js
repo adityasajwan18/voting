@@ -1,8 +1,8 @@
 // Initial Data State
 let candidates = [
-    { id: 1, name: "Alice Johnson", role: "President", icon: "👩‍💼", votes: 0 },
-    { id: 2, name: "Bob Smith", role: "President", icon: "👨‍💼", votes: 0 },
-    { id: 3, name: "Charlie Davis", role: "President", icon: "🧑‍💻", votes: 0 }
+    { id: 1, name: "Aditya Sajwan", role: "Pradhan", icon: "👩‍💼", votes: 0 },
+    { id: 2, name: "Anshul Negi", role: "Pradhan", icon: "👨‍💼", votes: 0 },
+    { id: 3, name: "Shashank rana", role: "Pradhan", icon: "🧑‍💻", votes: 0 }
 ];
 
 let totalVotes = 0;
@@ -117,6 +117,21 @@ function showMainContent() {
 
 // Navigation Logic
 function switchPage(page) {
+    // If switching to admin page, ask for password
+    if(page === 'admin' && userRole === 'admin') {
+        const password = prompt('Enter admin password to access the dashboard:');
+        
+        if(password === null) {
+            // User cancelled
+            return;
+        }
+        
+        if(password !== adminCredentials.password) {
+            alert('Incorrect password. Access denied.');
+            return;
+        }
+    }
+    
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
     document.querySelectorAll('.nav-links button:not(.logout-btn)').forEach(b => b.classList.remove('active'));
     
@@ -213,30 +228,6 @@ function resetSystem() {
         alert('All votes have been reset.');
     }
 }
-function renderAdminPage() {
-    const container = document.getElementById('results-container');
-    container.innerHTML = '';
-
-    candidates.forEach((candidate, index) => {
-        const percentage = totalVotes === 0 ? 0 : Math.round((candidate.votes / totalVotes) * 100);
-        
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.style.animationDelay = `${index * 0.1}s`;
-        
-        card.innerHTML = `
-            <h3>${candidate.name}</h3>
-            <div style="font-size: 2rem; font-weight: bold; color: var(--accent); margin: 10px 0;">
-                ${candidate.votes} <span style="font-size: 1rem; color: var(--text-muted)">votes</span>
-            </div>
-            <p>${percentage}% of total</p>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${percentage}%"></div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
 
 // Vote Logic
 function castVote(id) {
@@ -245,16 +236,15 @@ function castVote(id) {
         candidate.votes++;
         totalVotes++;
         
-        // Brief visual feedback
-        const btn = event.target;
-        const originalText = btn.innerText;
-        btn.innerText = "Vote Cast! ✓";
-        btn.style.backgroundColor = "#10b981"; // Green success color
+        // Show confirmation
+        alert(`Thank you, ${currentUser}! Your vote for ${candidate.name} has been recorded.`);
         
-        setTimeout(() => {
-            btn.innerText = originalText;
-            btn.style.backgroundColor = "var(--accent)";
-        }, 1500);
+        // Disable voting after casting vote
+        document.querySelectorAll('.vote-btn').forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+        });
     }
 }
 
@@ -266,6 +256,3 @@ function resetSystem() {
         renderAdminPage();
     }
 }
-
-// Run on load
-init();

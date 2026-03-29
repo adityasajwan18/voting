@@ -448,39 +448,6 @@ main {
     display: block;
 }
 
-.header-text {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.header-text h2 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-}
-
-.header-text p {
-    color: var(--text-muted);
-}
-
-/* Cards Grid */
-.candidates-grid, .results-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.card {
-    background-color: var(--card-bg);
-    border-radius: 16px;
-    padding: 25px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: slideUp 0.5s ease-out backwards;
-}
-
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
