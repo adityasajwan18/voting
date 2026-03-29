@@ -94,8 +94,8 @@ function logout() {
     document.getElementById('home-page').style.display = 'flex';
     
     // Clear forms
-    document.getElementById('admin-username').value = 'AnshulNegi';
-    document.getElementById('admin-password').value = 'Anshul@1506';
+    document.getElementById('admin-username').value = '';
+    document.getElementById('admin-password').value = '';
     document.getElementById('voter-name').value = '';
     document.getElementById('admin-error').classList.remove('show');
     document.getElementById('voter-error').classList.remove('show');
@@ -117,18 +117,31 @@ function showMainContent() {
 
 // Navigation Logic
 function switchPage(page) {
-    // If switching to admin page, ask for password
-    if(page === 'admin' && userRole === 'admin') {
-        const password = prompt('Enter admin password to access the dashboard:');
-        
-        if(password === null) {
-            // User cancelled
-            return;
-        }
-        
-        if(password !== adminCredentials.password) {
-            alert('Incorrect password. Access denied.');
-            return;
+    // If switching to admin page, require authentication
+    if(page === 'admin') {
+        // If user is not already authenticated as admin, ask for credentials
+        if(userRole !== 'admin') {
+            const username = prompt('Enter admin username:');
+            if(username === null) {
+                // User cancelled
+                return;
+            }
+            
+            const password = prompt('Enter admin password:');
+            if(password === null) {
+                // User cancelled
+                return;
+            }
+            
+            if(username !== adminCredentials.username || password !== adminCredentials.password) {
+                alert('Invalid admin credentials. Access denied.');
+                return;
+            }
+            
+            // Valid credentials provided - authenticate as admin
+            currentUser = username;
+            userRole = 'admin';
+            sessionStorage.setItem('user', JSON.stringify({name: username, role: 'admin'}));
         }
     }
     
